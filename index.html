@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八道题 · 迷你测试</title>
+<style>
+  :root{
+    --bg:#faf9f7;
+    --fg:#1f1d1a;
+    --muted:#8a857e;
+    --line:#e6e2dc;
+    --surface:#ffffff;
+    --accent:#b4553a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#171614;
+      --fg:#ede9e3;
+      --muted:#8f8a83;
+      --line:#2e2b27;
+      --surface:#201e1b;
+      --accent:#d97757;
+    }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft Yahei",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:560px;
+    margin:0 auto;
+    padding:48px 24px 72px;
+  }
+  .kicker{
+    font-size:13px;
+    letter-spacing:.16em;
+    color:var(--muted);
+    margin:0 0 14px;
+    text-transform:uppercase;
+  }
+  h1{
+    font-size:26px;
+    font-weight:600;
+    letter-spacing:-.01em;
+    margin:0 0 14px;
+    line-height:1.35;
+  }
+  .intro{
+    font-size:15px;
+    color:var(--muted);
+    margin:0 0 40px;
+    max-width:34em;
+  }
+  .bar{
+    height:2px;
+    background:var(--line);
+    border-radius:2px;
+    overflow:hidden;
+    margin-bottom:10px;
+  }
+  .bar > i{
+    display:block;
+    height:100%;
+    width:0%;
+    background:var(--accent);
+    transition:width .15s ease;
+  }
+  .counter{
+    font-size:13px;
+    color:var(--muted);
+    margin:0 0 28px;
+    font-variant-numeric:tabular-nums;
+  }
+  .q{
+    display:none;
+  }
+  .q.on{
+    display:block;
+  }
+  .q h2{
+    font-size:19px;
+    font-weight:600;
+    line-height:1.55;
+    margin:0 0 22px;
+    letter-spacing:-.005em;
+  }
+  .opt{
+    display:block;
+    width:100%;
+    text-align:left;
+    background:var(--surface);
+    border:1px solid var(--line);
+    color:var(--fg);
+    font-size:15px;
+    line-height:1.6;
+    font-family:inherit;
+    padding:18px 20px;
+    border-radius:14px;
+    margin-bottom:12px;
+    min-height:56px;
+    cursor:pointer;
+    transition:border-color .15s ease,opacity .15s ease;
+  }
+  .opt:active{opacity:.7;}
+  .opt.sel{border-color:var(--accent);}
+  .result{
+    display:none;
+  }
+  .result.on{
+    display:block;
+  }
+  .type{
+    font-size:44px;
+    font-weight:600;
+    letter-spacing:.04em;
+    margin:0 0 8px;
+    color:var(--accent);
+  }
+  .type-name{
+    font-size:15px;
+    color:var(--muted);
+    margin:0 0 32px;
+  }
+  .letters{
+    border-top:1px solid var(--line);
+  }
+  .letter{
+    display:flex;
+    gap:16px;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    font-size:14px;
+    line-height:1.65;
+  }
+  .letter b{
+    flex:0 0 22px;
+    font-weight:600;
+    color:var(--accent);
+  }
+  .letter span{
+    color:var(--muted);
+  }
+  .again{
+    margin-top:32px;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--muted);
+    font-family:inherit;
+    font-size:14px;
+    padding:12px 22px;
+    border-radius:999px;
+    min-height:44px;
+    cursor:pointer;
+  }
+  .note{
+    margin-top:44px;
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.7;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">八道题</p>
+  <h1>凭第一反应选，别琢磨</h1>
+  <p class="intro">两个选项都不完美是正常的。选你更常做的那一个，不是更想成为的那一个。</p>
+
+  <div class="bar"><i id="barFill"></i></div>
+  <p class="counter" id="counter">1 / 8</p>
+
+  <div id="quiz">
+
+    <div class="q on" data-q="0">
+      <h2>周五晚上突然空出来，你会做什么？</h2>
+      <button class="opt" data-l="I">一个人待着，看看书、发发呆，谁也别来打扰</button>
+      <button class="opt" data-l="E">约人出去，或者去人多的地方转转，热闹一场才叫放松</button>
+    </div>
+
+    <div class="q" data-q="1">
+      <h2>朋友跟你讲一件烦心事，你先做什么？</h2>
+      <button class="opt" data-l="S">问他具体发生了什么，一件事一件事捋清楚</button>
+      <button class="opt" data-l="N">先感觉到他整个人的状态，猜他真正卡在哪儿</button>
+    </div>
+
+    <div class="q" data-q="2">
+      <h2>做决定的时候，你更信哪个？</h2>
+      <button class="opt" data-l="T">讲道理，看哪边站得住，不站得住就不算数</button>
+      <button class="opt" data-l="F">看人，谁会被伤到，这件事值不值得这么做</button>
+    </div>
+
+    <div class="q" data-q="3">
+      <h2>出门旅行前，你的行李怎样？</h2>
+      <button class="opt" data-l="J">列单子，提前收拾好，路线也大致定下来</button>
+      <button class="opt" data-l="P">临出发再塞，到了再说，路上遇到什么算什么</button>
+    </div>
+
+    <div class="q" data-q="4">
+      <h2>一群人聊天，你通常？</h2>
+      <button class="opt" data-l="E">边聊边想，说着说着思路就出来了</button>
+      <button class="opt" data-l="I">先在心里过一遍，想清楚了才开口</button>
+    </div>
+
+    <div class="q" data-q="5">
+      <h2>别人夸你一句，你心里最先冒出来的是？</h2>
+      <button class="opt" data-l="S">具体哪里好，他说得对不对，有没有依据</button>
+      <button class="opt" data-l="N">他为什么这么说，这话后面还有没有别的意思</button>
+    </div>
+
+    <div class="q" data-q="6">
+      <h2>跟人起了争执，你更难受的是？</h2>
+      <button class="opt" data-l="T">对方讲的东西明明不对，还讲不通</button>
+      <button class="opt" data-l="F">气氛坏了，关系好像有了裂缝</button>
+    </div>
+
+    <div class="q" data-q="7">
+      <h2>事情做到一半发现方向错了，你会？</h2>
+      <button class="opt" data-l="J">停下来，重新排一遍再动手</button>
+      <button class="opt" data-l="P">边改边走，路上再调</button>
+    </div>
+
+  </div>
+
+  <div class="result" id="result">
+    <p class="type" id="typeCode">INFJ</p>
+    <p class="type-name" id="typeName">提倡者</p>
+    <div class="letters" id="letters"></div>
+    <button class="again" id="again">再来一次</button>
+  </div>
+
+  <p class="note">这个版本只够看个大概，不出完整报告。十六型那套东西本身也挺粗，当个热闹看就好。</p>
+</div>
+
+<script>
+(function(){
+  var answers = [];
+  var qs = document.querySelectorAll('.q');
+  var counter = document.getElementById('counter');
+  var barFill = document.getElementById('barFill');
+  var quiz = document.getElementById('quiz');
+  var result = document.getElementById('result');
+  var total = qs.length;
+
+  var names = {
+    INTJ:'建筑师', INTP:'逻辑学家', ENTJ:'指挥官', ENTP:'辩论家',
+    INFJ:'提倡者', INFP:'调停者', ENFJ:'主人公', ENFP:'竞选者',
+    ISTJ:'物流师', ISFJ:'守卫者', ESTJ:'总经理', ESFJ:'执政官',
+    ISTP:'鉴赏家', ISFP:'探险家', ESTP:'企业家', ESFP:'表演者'
+  };
+
+  var explain = {
+    I:'独处回血，先想清楚再开口',
+    E:'在人群里回血，边说边想',
+    S:'看具体的事，讲证据',
+    N:'看背后的意思，讲可能性',
+    T:'按道理判，对就是对',
+    F:'按人判，先看谁被伤到',
+    J:'先定好再走，不喜欢临时变',
+    P:'边走边改，喜欢留着口子'
+  };
+
+  function show(i){
+    for(var k=0;k<qs.length;k++){
+      qs[k].classList.toggle('on', k===i);
+    }
+    counter.textContent = (i+1) + ' / ' + total;
+    barFill.style.width = ((i)/total*100) + '%';
+  }
+
+  function pick(btn, idx){
+    var letter = btn.getAttribute('data-l');
+    answers[idx] = letter;
+
+    var siblings = qs[idx].querySelectorAll('.opt');
+    for(var k=0;k<siblings.length;k++){
+      siblings[k].classList.remove('sel');
+    }
+    btn.classList.add('sel');
+
+    if(idx + 1 < total){
+      setTimeout(function(){ show(idx+1); }, 120);
+    }else{
+      setTimeout(finish, 150);
+    }
+  }
+
+  function finish(){
+    barFill.style.width = '100%';
+    var count = {I:0,E:0,S:0,N:0,T:0,F:0,J:0,P:0};
+    for(var k=0;k<answers.length;k++){
+      if(answers[k]) count[answers[k]]++;
+    }
+    var code =
+      (count.E >= count.I ? 'E' : 'I') +
+      (count.N >= count.S ? 'N' : 'S') +
+      (count.F >= count.T ? 'F' : 'T') +
+      (count.P >= count.J ? 'P' : 'J');
+
+    document.getElementById('typeCode').textContent = code;
+    document.getElementById('typeName').textContent = names[code] || '';
+
+    var box = document.getElementById('letters');
+    box.innerHTML = '';
+    for(var m=0;m<4;m++){
+      var ch = code.charAt(m);
+      var row = document.createElement('div');
+      row.className = 'letter';
+      var b = document.createElement('b');
+      b.textContent = ch;
+      var s = document.createElement('span');
+      s.textContent = explain[ch];
+      row.appendChild(b);
+      row.appendChild(s);
+      box.appendChild(row);
+    }
+
+    quiz.style.display = 'none';
+    counter.style.display = 'none';
+    result.classList.add('on');
+    window.scrollTo({top:0, behavior:'auto'});
+  }
+
+  for(var i=0;i<qs.length;i++){
+    (function(idx){
+      var opts = qs[idx].querySelectorAll('.opt');
+      for(var j=0;j<opts.length;j++){
+        (function(btn){
+          btn.addEventListener('click', function(){ pick(btn, idx); });
+        })(opts[j]);
+      }
+    })(i);
+  }
+
+  document.getElementById('again').addEventListener('click', function(){
+    answers = [];
+    result.classList.remove('on');
+    quiz.style.display = 'block';
+    counter.style.display = 'block';
+    barFill.style.width = '0%';
+    show(0);
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>
